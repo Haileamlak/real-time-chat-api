@@ -116,7 +116,51 @@ REDIS_ADDR=redis:6379
 
 ---
 
-## TODO / Future Improvements
+## Endpoints
+
+### WebSocket
+
+* **Connect**: `ws://localhost:8080/ws?user={username}`
+* **Message Format**:
+
+```json
+{
+  "type": "dm",         // "dm", "group", or "broadcast"
+  "from": "alice",
+  "to": "bob",          // or group name
+  "content": "Hello!"
+}
+```
+
+### HTTP
+
+* **Sign Up**: `POST /signup`
+  - Body: `{ "username": "alice", "password": "password123" }`
+* **Login**: `POST /login`
+  - Body: `{ "username": "alice", "password": "password123" }`
+
+* **Direct Message**:
+  - **Send DM**: `POST /dm/send`
+    - Body: `{ "to": "bob", "content": "Hello Bob!" }`  
+  - **Get DM History**: `GET /dm/:user`
+    - Returns message history with the specified user 
+* **Group Chat**:
+  - **Create Group**: `POST /group/create`
+    - Body: `{ "name": "mygroup" }` 
+  - **Join Group**: `POST /group/join`
+    - Body: `{ "name": "mygroup" }`
+  - **Send Group Message**: `POST /group/send`
+    - Body: `{ "name": "mygroup", "content": "Hello group!" }`
+  - **Group History**: `GET /group/:name/history`
+    - Returns message history for the specified group
+* **Broadcast Messages**:
+  - **Send Broadcast**: `POST /broadcast/send`
+    - Body: `{ "content": "Hello everyone!" }`
+  - **Broadcast History**: `GET /broadcast/history`
+    - Returns message history for the broadcast channel
+---
+
+## Future Improvements
 
 * Replace basic token auth with JWT
 * Persist messages in Redis with TTL or logs
